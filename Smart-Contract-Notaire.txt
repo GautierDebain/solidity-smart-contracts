@@ -1,0 +1,16 @@
+pragma solidity ^0.4.18;
+
+contract Notaire
+{
+
+    //VARIABLES 
+    bytes32 hash ;
+
+    //CONSTRUCTOR
+    function Notaire(bytes32 _hash)
+    {
+        
+    hash = _hash ;
+    
+    }
+}

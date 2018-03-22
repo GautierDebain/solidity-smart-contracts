@@ -1,0 +1,52 @@
+pragma solidity ^0.4.18;
+
+contract voteSystem
+{
+    
+    struct Candidat{
+        string name;
+        uint votesCount;
+        uint candidatID;
+    }
+    //VARIABLES 
+    address public owner; 
+    mapping(address => uint)public listOfVoters ;
+
+    Candidat[] candidatsList;               //tableau de candidats, taille 2, on est au 2ème tour de l'élection présidentielle
+
+    //MODIFIER
+    modifier isOwner() {                    // si le message.sender n'est pas le meme que owner alors on interdit à toutes les fonctions
+                                            // qui sont taguées avec isOwner 
+        if( msg.sender != owner ){
+            revert();
+        }
+        _;
+    }
+
+    //CONSTRUCTOR
+    function voteSystem(bytes32 _hash)  public isOwner{
+        //hash = _hash ;
+        //sender.hasVoted = false;
+        owner = msg.sender;
+    }
+    
+    //FUNCTIONS
+    function addVoter(address _addressVoter) public isOwner() {
+        listOfVoters[_addressVoter] = 1;
+    }
+ 
+    function addProposal(string _candidatname,uint _candidatID) public isOwner(){
+        candidatsList.push(Candidat(_candidatname,  0,_candidatID));
+    }   
+    
+    function vote(uint _indicecandidat) public isOwner{
+        candidatsList[_indicecandidat].votesCount++;
+        
+        listOfVoters[msg.sender]=0;
+    }
+
+    
+    function kill() public isOwner {
+        if (msg.sender == owner) selfdestruct(owner);
+    }
+}
